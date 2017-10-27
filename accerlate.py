@@ -50,6 +50,9 @@ def num_multiply(exy):
 def num_divide(exy):
     '''多数连除'''
     res = re.split('\/', exy)
+    for i in res:
+        if i == '0':
+            exit("除数不能为0.请检查表达式")
     out = float(res[0]) / float(res[1])
     if len(res) > 2:
         for i in range(2, len(res)):
@@ -98,7 +101,9 @@ def second(u_str):
             return u_str
          elif '-' in u_str:
             u_str = num_minus(u_str)
-            return u_str
+         return u_str
+
+   return u_str
 
 @timer
 def core(expcetions):
@@ -133,20 +138,30 @@ def  fixbug(come):
             come = come.replace('--','+')
     return come
 
+def verify():
+    while True:
+        imm = input("输入您的表达式:>>").strip()
+        res = re.findall(r'[\-\*\/\+]([\-\*\/\+])*',imm)
+        monitor = [k for k in res if len(k) > 0]
+        if monitor :
+            print('error:两个或多个运算符相连，表达式有误!')
+            continue
+        if re.match(r'^[\+\-\*\/]',imm):
+            print('error：{0}:运算符前缺失字符'.format(imm))
+            continue
+        if imm.endswith(('+','-','*','/')):
+            print('error: {0}:运算符后缺失字符'.format(imm))
+            continue
+        break
+    return imm
 
 
 
 if __name__ == '__main__':
 
     while True:
-        # imm = '1-2*((60+2*(-3-40.0/5)*(9-2*5/3+7/3*99/4*2998+10*568/14))-(-4*3)/(16-3*2))'
-        imm = input("输入您的表达式:>>").strip()
-        res = re.findall(r'[\-\*\/\+]([\-\*\/\+])*',imm)
-        monitor = [k for k in res if len(k) > 0]
-        if monitor :
-            print("两个或多个运算符相连，表达式有误！")
-            continue
-        else:
+
+            imm = verify()
             num = 0
             middle_num = imm
             while True:
@@ -163,9 +178,6 @@ if __name__ == '__main__':
                     res_eval = eval(imm)
                     print('eval计算结果:{0}'.format(res_eval))
                     break
-
-
-
 
 
 
